@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const { model, Schema } = mongoose;
 
+//Object with Validation
 let categorySchema = Schema(
   {
     name: {

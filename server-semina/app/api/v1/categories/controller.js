@@ -1,11 +1,13 @@
 const Categories = require('./model');
+const {
+  getAllCategories,
+  createCategories,
+  getOneCategories,
+} = require('../../../service/mongoose/categories');
 
 const create = async (req, res, next) => {
   try {
-    const { name } = req.body;
-
-    const result = await Categories.create({ name });
-
+    const result = await createCategories(req);
     res.status(201).json({ data: result });
   } catch (err) {
     next(err);
@@ -14,7 +16,7 @@ const create = async (req, res, next) => {
 
 const index = async (req, res, next) => {
   try {
-    const result = await Categories.find().select('_id name');
+    const result = await getAllCategories();
     res.status(200).json({ data: result });
   } catch (error) {
     next(error);
@@ -23,13 +25,7 @@ const index = async (req, res, next) => {
 
 const find = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const result = await Categories.findOne({ _id: id });
-
-    if (!result) {
-      return res.status(404).json({ message: 'Id Categories tidak ditemukan' });
-    }
-
+    const result = await getOneCategories(req);
     res.status(200).json({ data: result });
   } catch (err) {
     next(err);
@@ -71,9 +67,10 @@ const destroy = async (req, res, next) => {
   try {
     const { id } = req.params;
     const result = await Categories.findByIdAndRemove(id);
-    res
-      .status(200)
-      .json({ data: result.name, message: `${result.name} telah behasil diapus` });
+    res.status(200).json({
+      data: result.name,
+      message: `${result.name} telah behasil diapus`,
+    });
   } catch (error) {
     next(error);
   }

@@ -10,15 +10,13 @@ const categoriesRouter = require('./app/api/v1/categories/router');
 
 const v1 = '/api/v1/cms';
 const notFoundMiddleware = require('./app/midlleware/not-found');
-const handleErrorMiddleware = require('./app/midlleware/handler-error ');
+const handleErrorMiddleware = require('./app/midlleware/handler-error');
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(notFoundMiddleware);
-app.use(handleErrorMiddleware);
 
 app.get('/', (req, res) => {
   res.status(200).json({
@@ -27,5 +25,6 @@ app.get('/', (req, res) => {
 });
 
 app.use(v1, categoriesRouter);
-
+app.use(notFoundMiddleware);
+app.use(handleErrorMiddleware);
 module.exports = app;
