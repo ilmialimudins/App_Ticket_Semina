@@ -1,14 +1,16 @@
-const Categories = require('./model');
+ const { StatusCodes } = require('http-status-codes');
 const {
   getAllCategories,
   createCategories,
   getOneCategories,
+  updateCategories,
+  deleteCategories,
 } = require('../../../service/mongoose/categories');
 
 const create = async (req, res, next) => {
   try {
     const result = await createCategories(req);
-    res.status(201).json({ data: result });
+    res.status(StatusCodes.CREATED).json({ data: result });
   } catch (err) {
     next(err);
   }
@@ -17,7 +19,7 @@ const create = async (req, res, next) => {
 const index = async (req, res, next) => {
   try {
     const result = await getAllCategories();
-    res.status(200).json({ data: result });
+    res.status(StatusCodes.OK).json({ data: result });
   } catch (error) {
     next(error);
   }
@@ -26,7 +28,7 @@ const index = async (req, res, next) => {
 const find = async (req, res, next) => {
   try {
     const result = await getOneCategories(req);
-    res.status(200).json({ data: result });
+    res.status(StatusCodes.OK).json({ data: result });
   } catch (err) {
     next(err);
   }
@@ -34,30 +36,9 @@ const find = async (req, res, next) => {
 
 const update = async (req, res, next) => {
   try {
-    // const { id } = req.params;
-    // const { name } = req.body;
-    // const result = await Categories.findOne({ _id: id });
+    const result = await updateCategories(req);
 
-    // if (!result) {
-    //   return res.status(404).json({ message: 'Id Categories tidak ditemukan' });
-    // }
-    // result.name = name;
-    // result.save();
-    // res.status(200).json({
-    //   data: result,
-    // });
-
-    const { id } = req.params;
-    const { name } = req.body;
-    const result = await Categories.findOneAndUpdate(
-      { _id: id },
-      { name },
-      { new: true, runValidators: true }
-    );
-
-    res.status(200).json({
-      data: result,
-    });
+    res.status(StatusCodes.OK).json({ data: result });
   } catch (error) {
     next(error);
   }
@@ -65,11 +46,10 @@ const update = async (req, res, next) => {
 
 const destroy = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const result = await Categories.findByIdAndRemove(id);
-    res.status(200).json({
-      data: result.name,
-      message: `${result.name} telah behasil diapus`,
+    const result = await deleteCategories(req);
+    res.status(StatusCodes.OK).json({
+      data: result,
+      message: 'Data berhasil dihapus',
     });
   } catch (error) {
     next(error);
