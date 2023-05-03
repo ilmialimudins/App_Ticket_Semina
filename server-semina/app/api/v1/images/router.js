@@ -6,4 +6,4 @@ const upload = require('../../../midlleware/multer');
 
 router.post('/images', upload.single('avatar'), create);
 
-module.exports = router; 
+module.exports = router;
