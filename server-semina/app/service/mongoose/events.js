@@ -63,7 +63,7 @@ const createEvents = async (req) => {
   const check = await Events.findOne({ title });
 
   //apabila cek true / data events sudah ada maka kita tampilkan error bad request
-  if (check) throw new BadRequestError('judul event duplikat');
+  if (check) throw new BadRequestError('judul acara sudah terdafrtar');
 
   const result = await Events.create({
     title,
@@ -166,7 +166,7 @@ const deleteEvents = async (req) => {
   return result;
 };
 
-module.export = {
+module.exports = {
   getAllEvents,
   getOneEvents,
   createEvents,
