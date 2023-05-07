@@ -1,14 +1,12 @@
 const { StatusCodes } = require('http-status-codes');
 const errorHandlerMiddleware = (err, req, res, next) => {
-console.log(err.message)
-	//Server Error
+  //Server Error
   let customError = {
-
     statusCode: err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
     msg: err.message || ' Something went wrong try again later',
   };
 
-	//Validation Error
+  //Validation Error
   if (err.name === 'ValidationError') {
     customError.msg = Object.values(err.errors)
       .map((item) => item.message)
@@ -16,7 +14,7 @@ console.log(err.message)
     customError.statusCode = 400;
   }
 
-	//Duplicate Error
+  //Duplicate Error
   if (err.code && errorHandlerMiddleware.code === 11000) {
     customError.msg = `Duplicate value entered for ${Object.keys(
       err.keyValue
@@ -24,7 +22,7 @@ console.log(err.message)
     customError.statusCode = 400;
   }
 
-	//Not Found Error
+  //Not Found Error
   if (err.name === 'CastError') {
     customError.msg = `No item found with id: ${err.value}`;
     customError.statusCode = 404;

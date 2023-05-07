@@ -15,8 +15,8 @@ const create = async (req, res, next) => {
     res.status(StatusCodes.CREATED).json({
       data: result,
     });
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -27,8 +27,8 @@ const index = async (req, res, next) => {
     res.status(StatusCodes.OK).json({
       data: result,
     });
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -39,8 +39,8 @@ const find = async (req, res, next) => {
     res.status(StatusCodes.OK).json({
       data: result,
     });
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -51,8 +51,8 @@ const update = async (req, res, next) => {
     res.status(StatusCodes.OK).json({
       data: result,
     });
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -63,8 +63,8 @@ const destroy = async (req, res, next) => {
     res.status(StatusCodes.OK).json({
       data: result,
     });
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -73,5 +73,5 @@ module.exports = {
   find,
   create,
   update,
-  destroy,	
+  destroy,
 };

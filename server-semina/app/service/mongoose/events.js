@@ -5,7 +5,6 @@ const { checkingImage } = require('./images');
 const { checkingTalents } = require('./talents');
 
 const { BadRequestError, NotFoundError } = require('../../errors');
-const { CONFLICT } = require('http-status-codes');
 
 // get All event
 const getAllEvents = async (req) => {
@@ -31,9 +30,9 @@ const getAllEvents = async (req) => {
       select: '_id name',
     })
     .populate({
-      path: 'talen',
+      path: 'talent',
       select: '_id name role image',
-      populate: { path: 'imgae', select: '_id name' },
+      populate: { path: 'image', select: '_id name' },
     });
   return result;
 };
@@ -63,7 +62,7 @@ const createEvents = async (req) => {
   const check = await Events.findOne({ title });
 
   //apabila cek true / data events sudah ada maka kita tampilkan error bad request
-  if (check) throw new BadRequestError('judul acara sudah terdafrtar');
+  if (check) throw new BadRequestError('judul acara sudah terdaftar');
 
   const result = await Events.create({
     title,
@@ -93,10 +92,7 @@ const getOneEvents = async (req) => {
       select: '_id name role image',
       populate: { path: 'image', select: '_id name' },
     });
-
-  if (!result) {
-    throw new BadRequestError(`Tidak ada pembicara dengan id: ${id}`);
-  }
+  if (!result) throw new NotFoundError(`Tidak ada events	 dengan id :${id}`);
   return result;
 };
 
@@ -123,15 +119,23 @@ const updateEvents = async (req) => {
   await checkingCategories(category);
   await checkingTalents(talent);
 
+  //carri  event berdasarkan  field id
+  const checkEvent = await Events.findOne({
+    _id: id,
+  });
+
+  //jika id false/ null maka akan menampilkan error ' Tidak ada acara dengan id:..
+  if (!checkEvent) throw new NotFoundError(`Tidak ada acara dengan id: ${id}`);
+
   //cari events dengan field name dan id selain dari yang dikirim dari params
   const check = await Events.findOne({
     title,
     _id: { $ne: id },
   });
 
-  if (check) throw new BadRequestError('judul event duplicate');
+  if (check) throw new BadRequestError('judul acara telah terdaftar');
 
-  const result = await Events.findOneAndUpdated(
+  const result = await Events.findByIdAndUpdate(
     { _id: id },
     {
       title,
@@ -149,7 +153,6 @@ const updateEvents = async (req) => {
     { new: true, runValidators: true }
   );
 
-  if (!result) throw new BadRequestError(`Tidak ada acara dengan id: ${id}`);
   return result;
 };
 
@@ -160,16 +163,23 @@ const deleteEvents = async (req) => {
   const result = await Events.findByIdAndRemove(id);
 
   if (!result) {
-    throw new BadRequestError(`Tidak ada pembicara dengan id: ${id}`);
+    throw new BadRequestError(`Tidak ada acara dengan id: ${id}`);
   }
 
   return result;
 };
 
+//checking Events
+const checkingEvents = async (id) => {
+  const result = await Events.findOne({ _id: id });
+  if (!result) throw new NotFoundError(`Tidak ada Event dengan id: ${id}`);
+  return result;
+};
 module.exports = {
   getAllEvents,
   getOneEvents,
   createEvents,
   updateEvents,
   deleteEvents,
+  checkingEvents,
 };
