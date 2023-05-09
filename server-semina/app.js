@@ -10,11 +10,11 @@ const categoriesRouter = require('./app/api/v1/categories/router');
 const imagesRouter = require('./app/api/v1/images/router');
 const talentsRouter = require('./app/api/v1/talents/router');
 const eventsRouter = require('./app/api/v1/events/router');
+const organizerRouter = require('./app/api/v1/organizers/routes');
 
 const v1 = '/api/v1/cms';
 const handleErrorMiddleware = require('./app/midlleware/handler-error');
 const notFoundMiddleware = require('./app/midlleware/not-found');
- 
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -32,6 +32,7 @@ app.use(v1, categoriesRouter);
 app.use(v1, imagesRouter);
 app.use(v1, talentsRouter);
 app.use(v1, eventsRouter);
+app.use(v1, organizerRouter);
 
 app.use(handleErrorMiddleware);
 app.use(notFoundMiddleware);

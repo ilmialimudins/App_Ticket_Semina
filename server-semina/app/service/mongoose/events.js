@@ -163,7 +163,7 @@ const deleteEvents = async (req) => {
   const result = await Events.findByIdAndRemove(id);
 
   if (!result) {
-    throw new BadRequestError(`Tidak ada acara dengan id: ${id}`);
+    throw new BadRequestError(`Tidak ada acaranpm run dev  dengan id: ${id}`);
   }
 
   return result;
